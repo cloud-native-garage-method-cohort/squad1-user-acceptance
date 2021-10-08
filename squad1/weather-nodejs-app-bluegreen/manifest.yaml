@@ -1,0 +1,120 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.openshift.io/runtime: js
+    app.openshift.io/vcs-ref: 9bc9ba453af6470f8d1a074c5727f3cb59f6c146
+    app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/squad1-front
+  labels:
+    app: weather-nodejs-app-bluegreen
+    app.kubernetes.io/instance: weather-nodejs-app-bluegreen
+    app.kubernetes.io/name: weather-nodejs-app-bluegreen
+  name: weather-nodejs-app-bluegreen
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: weather-nodejs-app-bluegreen
+    app.kubernetes.io/instance: weather-nodejs-app-bluegreen
+    app.kubernetes.io/name: weather-nodejs-app-bluegreen
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.openshift.io/runtime: js
+    app.openshift.io/vcs-ref: 9bc9ba453af6470f8d1a074c5727f3cb59f6c146
+    app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/squad1-front
+  labels:
+    app: weather-nodejs-app-bluegreen
+    app.kubernetes.io/instance: weather-nodejs-app-bluegreen
+    app.kubernetes.io/name: weather-nodejs-app-bluegreen
+  name: weather-nodejs-app-bluegreen
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: weather-nodejs-app-bluegreen
+      app.kubernetes.io/instance: weather-nodejs-app-bluegreen
+      app.kubernetes.io/name: weather-nodejs-app-bluegreen
+  template:
+    metadata:
+      annotations:
+        app.openshift.io/runtime: js
+        app.openshift.io/vcs-ref: 9bc9ba453af6470f8d1a074c5727f3cb59f6c146
+        app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/squad1-front
+      labels:
+        app: weather-nodejs-app-bluegreen
+        app.kubernetes.io/instance: weather-nodejs-app-bluegreen
+        app.kubernetes.io/name: weather-nodejs-app-bluegreen
+    spec:
+      containers:
+      - env:
+        - name: INGRESS_HOST
+        - name: PROTOCOLS
+        - name: LOG_LEVEL
+          value: debug
+        image: quay.io/rdemayo/weatherapp:9bc9ba453af6470f8d1a074c5727f3cb59f6c146
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: weather-nodejs-app-bluegreen
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: http
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    app.openshift.io/runtime: js
+    app.openshift.io/vcs-ref: 9bc9ba453af6470f8d1a074c5727f3cb59f6c146
+    app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/squad1-front
+    haproxy.router.openshift.io/balance: roundrobin
+  labels:
+    app: weather-nodejs-app-bluegreen
+    app.kubernetes.io/instance: weather-nodejs-app-bluegreen
+    app.kubernetes.io/name: weather-nodejs-app-bluegreen
+  name: weather-nodejs-app
+spec:
+  alternateBackends:
+  - kind: Service
+    name: weather-nodejs-app-bluegreen
+    weight: 50
+  to:
+    kind: Service
+    name: weather-nodejs-app
+    weight: 50
+  wildcardPolicy: None
