@@ -3,7 +3,7 @@ kind: Service
 metadata:
   annotations:
     app.openshift.io/runtime: js
-    app.openshift.io/vcs-ref: f0a1c28dce1ae6a5e6c01787e276e040da92a466
+    app.openshift.io/vcs-ref: 455f291089ecbf532b1649c573ad8cf4d8308cd2
     app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/squad1-front
   labels:
     app: weather-nodejs-app
@@ -28,7 +28,7 @@ kind: Deployment
 metadata:
   annotations:
     app.openshift.io/runtime: js
-    app.openshift.io/vcs-ref: f0a1c28dce1ae6a5e6c01787e276e040da92a466
+    app.openshift.io/vcs-ref: 455f291089ecbf532b1649c573ad8cf4d8308cd2
     app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/squad1-front
   labels:
     app: weather-nodejs-app
@@ -37,7 +37,7 @@ metadata:
   name: weather-nodejs-app
 spec:
   progressDeadlineSeconds: 600
-  replicas: 3
+  replicas: 2
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -48,7 +48,7 @@ spec:
     metadata:
       annotations:
         app.openshift.io/runtime: js
-        app.openshift.io/vcs-ref: f0a1c28dce1ae6a5e6c01787e276e040da92a466
+        app.openshift.io/vcs-ref: 455f291089ecbf532b1649c573ad8cf4d8308cd2
         app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/squad1-front
       labels:
         app: weather-nodejs-app
@@ -61,7 +61,7 @@ spec:
         - name: PROTOCOLS
         - name: LOG_LEVEL
           value: debug
-        image: quay.io/rdemayo/weatherapp:f0a1c28dce1ae6a5e6c01787e276e040da92a466
+        image: quay.io/rdemayo/weatherapp:455f291089ecbf532b1649c573ad8cf4d8308cd2
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
@@ -100,7 +100,7 @@ kind: Route
 metadata:
   annotations:
     app.openshift.io/runtime: js
-    app.openshift.io/vcs-ref: f0a1c28dce1ae6a5e6c01787e276e040da92a466
+    app.openshift.io/vcs-ref: 455f291089ecbf532b1649c573ad8cf4d8308cd2
     app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/squad1-front
   labels:
     app: weather-nodejs-app
